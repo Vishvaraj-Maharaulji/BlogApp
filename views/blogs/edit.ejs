@@ -1,0 +1,50 @@
+<% layout("layouts/boilerplate") %>
+<div class="row">
+    <h1 class="text-center">Edit Blog</h1>
+    <div class="col-md-6 offset-md-3">
+        <div class="card shadow">
+            <div class="card-body">
+                <form action="/blogs/<%= blog._id %>?_method=PUT" method="POST" novalidate class="validated-form"
+                    enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label" for="title">Title</label>
+                        <input class="form-control" type="text" id="title" name="blog[title]" value="<%= blog.title %>"
+                            required />
+                        <div class="valid-feedback">Looks good!</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="body">Body</label>
+                        <textarea class="form-control" name="blog[body]" id="body" cols="30" rows="5" required>
+<%= blog.body %></textarea>
+                        <div class="valid-feedback">Looks good!</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="image">Add More Image(s)</label>
+                        <input class="form-control" type="file" id="image" name="image" multiple />
+                    </div>
+                    <div class="mb-3">
+                        <% blog.images.forEach(function (img,i) { %>
+                        <div>
+                            <img src="<%= img.thumbnail %>" class="img-thumbnail" alt="" />
+                            <div class="form-check-inline">
+                                <input type="checkbox" id="image-<%= i %>" name="deleteImages[]"
+                                    value="<%= img.filename %>" />
+                                <label for="image-<%= i %>">Delete?</label>
+                            </div>
+                        </div>
+                        <% }) %>
+                    </div>
+                    <div class="row">
+                        <div class="mb-3 d-grid gap-2 col-md-6">
+                            <button class="btn btn-info">Submit</button>
+                        </div>
+                        <div class="mb-3 d-grid gap-2 col-md-6">
+                            <a class="btn btn-primary" href="/blogs/<%= blog._id %>">Back to Blog</a>
+                        </div>
+                    </div>
+                    <div class="mb-3 d-grid cap-2"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

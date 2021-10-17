@@ -1,0 +1,248 @@
+<% layout("layouts/boilerplate") %>
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card mb-3">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col text-start">
+                        <h3>
+                            <a href="/<%= blog.author._id %>/profile"
+                                class="card-link text-decoration-none text-primary">
+                                <%= blog.author.username %>
+                            </a>
+                        </h3>
+                    </div>
+                    <div class="col text-end">
+                        <p class="card-text text-muted">
+                            Blog Created:
+                            <%= blog.createdAt.getDate() %>-<%= blog.createdAt.getMonth() %>-<%= blog.createdAt.getFullYear() %>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div id="blogCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <% blog.images.forEach((img,i) => { %>
+                    <div class="carousel-item <%= i === 0 ? "active" : "" %>">
+                        <img src="<%= img.url %>" class="d-block w-100" alt="...">
+                    </div>
+                    <% }) %>
+                </div>
+                <% if(blog.images.length > 1) { %>
+                <button class="carousel-control-prev" type="button" data-bs-target="#blogCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#blogCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+                <% } %>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title"><%= blog.title %></h5>
+                <pre style="white-space:pre-wrap;font-family:Roboto,sans-serif;font-size:20px"><%=blog.body%></pre>
+            </div>
+            <% if( currentUser && blog.author.equals(currentUser._id)) { %>
+            <div class="card-body row">
+                <div class="col-lg-4 d-grid gap-2">
+                    <a class="btn btn-outline-info" href="/blogs/<%= blog._id %>/edit">Update Blog</a>
+                </div>
+                <div class="col-lg-4">
+                    <form class="d-inline d-grid gap-2" action="/blogs/<%= blog._id %>?_method=DELETE" method="POST">
+                        <button class="btn btn-outline-danger">Delete Blog</button>
+                    </form>
+                </div>
+                <div class="col-lg-4 d-grid gap-2">
+                    <a class="btn btn-outline-primary" href="/blogs">Back to All Blogs</a>
+                </div>
+            </div>
+            <% } else { %>
+            <div class="card-body row">
+                <div class="d-grid gap-2">
+                    <a class="btn btn-primary" href="/blogs">Back to All Blogs</a>
+                </div>
+            </div>
+            <% } %>
+            <% if(currentUser) { %>
+            <div class="card-footer row mx-0 align-items-center">
+                <div class="col">
+                    <% if(currentUser) { %>
+                    <p style="color:<%= (currentUser.likedBlogs.indexOf(blog._id)===-1?"#6c757d":"#0d6efd") %>;"
+                        class="btn d-line" id="like"><span class="material-icons mt-3">thumb_up</span></p>
+                    <p id="likeCount" class="d-inline"> <%=blog.likeCount %></p>
+                    <% } %>
+                </div>
+                <div class="col">
+                    <% if(currentUser){ %>
+                    <p style="color:<%= (currentUser.dislikedBlogs.indexOf(blog._id)===-1?"#6c757d":"#0d6efd") %>;"
+                        class="btn d-line" id="dislike"><span class="material-icons mt-3">thumb_down</span></p>
+                    <p id="dislikeCount" class="d-inline"> <%=blog.dislikeCount %></p>
+                    <% } %>
+                </div>
+                <div class="col">
+                    <a id="comment-a" data-bs-toggle="collapse" href="#collapseComment" aria-expanded="false"
+                        aria-controls="collapseComment">
+                        <div class="row">
+                            <div class="col text-end pe-0">
+                                <span class="material-icons">comment</span>
+                            </div>
+                            <div class="col text-start ps-1">
+                                Comment
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="card-footer row mx-0">
+                <div class="col text-end mt-1">
+                    <p class="text-muted">Last Updated: <%= blog.date %></p>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<% if(currentUser) { %>
+<div class="row mb-3 collapse" id="collapseComment">
+    <div class="col-md-8 offset-md-2">
+        <form action="/blogs/<%=blog._id%>/comments" method="POST" novalidate class="validated-form mb-3">
+            <div class="input-group mb-3">
+                <span class="input-group-text"><%= currentUser.username %></span>
+                <input type="text" class="form-control" name="comment[text]" placeholder="Write a Comment..."
+                    aria-describedby="comment" required>
+                <button class="btn btn-outline-primary" type="submit" id="comment"><span
+                        class="material-icons mt-1">send</span></button>
+            </div>
+        </form>
+        <div class="card mb-3">
+            <% for(let comment of blog.comments) { %>
+            <div class="card-body border-bottom">
+                <div class="row mb-3">
+                    <div class="col text-start">
+                        <a href="/<%= comment.author._id %>/profile"
+                            class="card-link text-decoration-none text-primary">
+                            <%= comment.author.username %>
+                        </a>
+                    </div>
+                    <div class="col text-end">
+                        <p class="card-text text-muted"><%= comment.date %></p>
+                    </div>
+                </div>
+                <hr>
+                <p class="card-text"><%= comment.text %></p>
+                <hr>
+                <div class="row align-items-center">
+                    <div class="col">
+                        <a id="reply-a" data-bs-toggle="collapse" href="#collapseReplies<%=comment._id%>"
+                            aria-expanded="false" aria-controls="collapseReplies<%=comment._id%>">
+                            <div class="row">
+                                <div class="col text-end pe-0">
+                                    <span class="material-icons">comment</span>
+                                </div>
+                                <div class="col text-start ps-1">
+                                    Reply
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <% if( currentUser && comment.author.equals(currentUser._id)) { %>
+                    <div class="col text-center">
+                        <form action="/blogs/<%= blog._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST">
+                            <button class="btn btn-link text-secondary">
+                                <span class="material-icons mt-1">delete</span></button>
+                        </form>
+                    </div>
+                    <% } %>
+                </div>
+                <div class="collapse" id="collapseReplies<%=comment._id%>">
+                    <form action="/blogs/<%= blog._id %>/comments/<%= comment._id %>/replies" method="POST" novalidate
+                        class="validated-form my-3">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text"><%= currentUser.username %></span>
+                            <input type="text" class="form-control" name="reply[text]" placeholder="Write a Reply..."
+                                aria-label="Recipient's username" aria-describedby="reply" required>
+                            <button class="btn btn-outline-primary" type="submit" id="reply"><span
+                                    class="material-icons mt-1">send</span></button>
+                        </div>
+                    </form>
+                    <% for(let reply of comment.replies) { %>
+                    <div class="card mb-3">
+                        <div class="px-3">
+                            <div class="card-body">
+                                <div class="row mb-3 align-items-center">
+                                    <div class="col text-start">
+                                        <a href="/<%= reply.author._id %>/profile"
+                                            class="card-link text-decoration-none text-primary">
+                                            <%= reply.author.username %>
+                                        </a>
+                                    </div>
+                                    <% if( currentUser && reply.author.equals(currentUser._id)) { %>
+                                    <div class="col text-start">
+                                        <form
+                                            action="/blogs/<%= blog._id %>/comments/<%= comment._id %>/replies/<%= reply._id %>?_method=DELETE"
+                                            method="POST">
+                                            <button class="btn btn-link text-secondary">
+                                                <span class="material-icons">delete</span></button>
+                                        </form>
+                                    </div>
+                                    <% } %>
+                                    <div class="col text-end">
+                                        <p class="card-text text-muted"><%= reply.date %></p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <p class="card-text"><%=reply.text%></p>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </div>
+</div>
+<% } %>
+
+<% if(currentUser) { %>
+<script>
+    $(document).ready(function () {
+
+        $("#like").click(function () {
+
+            $.ajax({
+                url: "/blogs/<%=blog._id%>/user/<%=currentUser._id%>/l",
+                type: 'post',
+
+                success: function (data) {
+                    $('#likeCount').html(data.likeCount);
+                    $('#dislikeCount').html(data.dislikeCount);
+                    $('#like').css('color', '#0d6efd')
+                    $('#dislike').css('color', "#6c757d");
+                }
+            })
+        })
+    })
+    $(document).ready(function () {
+
+        $("#dislike").click(function () {
+
+            $.ajax({
+                url: '/blogs/<%=blog._id%>/user/<%=currentUser._id%>/d',
+                type: 'post',
+
+                success: function (data) {
+                    $('#likeCount').html(data.likeCount);
+                    $('#dislikeCount').html(data.dislikeCount);
+
+                    $('#dislike').css('color', '#0d6efd')
+                    $('#like').css('color', '#6c757d');
+                }
+            })
+        })
+    })
+</script>
+<% } %>

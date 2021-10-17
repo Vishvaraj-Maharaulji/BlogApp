@@ -1,0 +1,39 @@
+a#comment-a {
+    color: #6c757d;
+    text-decoration: none;
+}
+
+a#comment-a:hover {
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+a#comment-a[aria-expanded="true"] {
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+a#comment-a[aria-expanded="true"]:hover {
+    color: #6c757d;
+    text-decoration: none;
+}
+
+a#reply-a {
+    color: #6c757d;
+    text-decoration: none;
+}
+
+a#reply-a:hover {
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+a#reply-a[aria-expanded="true"] {
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+a#reply-a[aria-expanded="true"]:hover {
+    color: #6c757d;
+    text-decoration: none;
+}

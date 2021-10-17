@@ -1,0 +1,22 @@
+<% layout("layouts/boilerplate") %>
+<h1 class="my-3 text-center">BLOGS</h1>
+<% for(let blog of blogs) { %>
+<div class="card mb-3">
+    <div class="row">
+        <div class="col-md-4">
+            <% if(blog.images.length) { %>
+            <img class="img-fluid" src="<%= blog.images[0].url %>" alt="" />
+            <% } else { %>
+            <img class="img-fluid" src="" alt="No Image" />
+            <% } %>
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title"><%= blog.title %></h5>
+                <p class="card-text"><%= blog.body.substring(0,500) %></p>
+                <a href="/blogs/<%= blog._id %>" class="btn btn-outline-primary">View Blog</a>
+            </div>
+        </div>
+    </div>
+</div>
+<% } %>
