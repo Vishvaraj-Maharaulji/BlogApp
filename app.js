@@ -13,7 +13,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const mongoSanitize = require("express-mongo-sanitize");
 const helmet = require("helmet");
-const MongoDBStore = require("connect-mongo");
+const MongoStore = require("connect-mongo");
 
 const User = require("./models/user");
 const ExpressError = require("./utils/ExpressError");
@@ -48,7 +48,7 @@ app.use(mongoSanitize());
 
 const secret = process.env.SECRET || "thisismysecret";
 
-const store = new MongoDBStore({
+const store = MongoStore.create({
     mongoUrl: dbUrl,
     secret,
     touchAfter: 24 * 60 * 60,
@@ -66,7 +66,7 @@ const sessionConfig = {
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
-        // secure: true,
+        secure: true,
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
         maxAge: 1000 * 60 * 60 * 24 * 7,
     },
@@ -87,9 +87,9 @@ const scriptSrcUrls = [
 const styleSrcUrls = [
     "https://kit-free.fontawesome.com/",
     "https://fonts.googleapis.com/",
+    "https://stackpath.bootstrapcdn.com/",
     "https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css",
     "https://use.fontawesome.com/",
-    "https://fonts.googleapis.com/icon?family=Material+Icons",
 ];
 
 const connectSrcUrls = [];

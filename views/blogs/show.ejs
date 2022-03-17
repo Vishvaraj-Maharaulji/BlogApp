@@ -13,9 +13,9 @@
                         </h3>
                     </div>
                     <div class="col text-end">
-                        <p class="card-text text-muted">
-                            Blog Created:
-                            <%= blog.createdAt.getDate() %>-<%= blog.createdAt.getMonth() %>-<%= blog.createdAt.getFullYear() %>
+                        <p class="card-text text-muted mt-1">
+                            Created:
+                            <%= blog.createdAt.getDate() %>-<%= blog.createdAt.getMonth() + 1 %>-<%= blog.createdAt.getFullYear() %>
                         </p>
                     </div>
                 </div>
@@ -60,20 +60,20 @@
             <% } else { %>
             <div class="card-body row">
                 <div class="d-grid gap-2">
-                    <a class="btn btn-primary" href="/blogs">Back to All Blogs</a>
+                    <a class="btn btn-outline-primary" href="/blogs">Back to All Blogs</a>
                 </div>
             </div>
             <% } %>
             <% if(currentUser) { %>
             <div class="card-footer row mx-0 align-items-center">
-                <div class="col">
+                <div class="col text-center">
                     <% if(currentUser) { %>
                     <p style="color:<%= (currentUser.likedBlogs.indexOf(blog._id)===-1?"#6c757d":"#0d6efd") %>;"
                         class="btn d-line" id="like"><span class="material-icons mt-3">thumb_up</span></p>
                     <p id="likeCount" class="d-inline"> <%=blog.likeCount %></p>
                     <% } %>
                 </div>
-                <div class="col">
+                <div class="col text-center">
                     <% if(currentUser){ %>
                     <p style="color:<%= (currentUser.dislikedBlogs.indexOf(blog._id)===-1?"#6c757d":"#0d6efd") %>;"
                         class="btn d-line" id="dislike"><span class="material-icons mt-3">thumb_down</span></p>

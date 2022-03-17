@@ -28,7 +28,7 @@
                             <h3 class="card-title text-center text-light mb-3">Username : <%= user.username %></h3>
                             <h4 class="card-subtitle text-center text-light mb-3">Email : <%= user.email %></h4>
                             <h5 class="card-text text-center text-light mb-3">User Joined :
-                                <%= user.createdAt.getDate() %>-<%= user.createdAt.getMonth() %>-<%= user.createdAt.getFullYear() %>
+                                <%= user.createdAt.getDate() %>-<%= user.createdAt.getMonth() + 1 %>-<%= user.createdAt.getFullYear() %>
                             </h5>
                             <h5 class="card-text text-center text-light mb-3">Blogs Liked: <%= user.likedBlogs.length %>
                             </h5>

@@ -15,7 +15,11 @@ module.exports.createComment = async (req, res) => {
 
 module.exports.deleteComment = async (req, res) => {
     const { id, commentId } = req.params;
-    await Blog.findByIdAndUpdate(id, { $pull: { comments: commentId } });
+    await Blog.findByIdAndUpdate(
+        id,
+        { $pull: { comments: commentId } },
+        { timestamps: { createdAt: true, updatedAt: false } }
+    );
     await Comment.findByIdAndDelete(commentId);
     req.flash("success", "Successfully deleted comment!");
     res.redirect(`/blogs/${id}`);
